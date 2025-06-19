@@ -1,0 +1,146 @@
+.section.weapon-specs-container {
+    padding: 0 10px;
+    margin-bottom: 70px;
+}
+
+.weapon-specs-container .weapon-specs-table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #F96800;
+    padding: 0;
+    margin: 0 auto;
+
+    .title {
+        background: linear-gradient(0deg, #F9680080 0%, #F9680080 100%);
+        box-shadow: 0 4px 8px 0 rgb(0 0 0 / 35%), 0 0 24px 0 #F96800 inset;
+        padding: 10px 16px;
+
+        h2 {
+            margin: 0;
+            font-weight: 900;
+            font-style: normal;
+            letter-spacing: 1px;
+            font-size: 1.25rem;
+            line-height: 1.25rem;
+            text-transform: uppercase;
+        }
+    }
+
+    .head,
+    .row {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+    }
+
+    .head {
+        padding: 8px 16px;
+        background: #24272A;
+
+        p {
+            margin: 0;
+            text-transform: uppercase;
+            font-size: 0.88rem;
+        }
+    }
+
+    .row {
+        background-color: #24272A;
+        padding: 8px 16px;
+       
+        &:nth-child(odd) {
+            background-color: #3C4147;
+        }
+
+        & > div:first-child {
+            h3 {
+                text-align: center;
+                text-transform: capitalize;
+                margin: 6px 0 0;
+            }
+        }
+
+        &:last-child {
+            padding-bottom: 20px;
+        }
+
+        p:has(em) {
+            width: 100%;
+            
+            &:has(u) {
+                font-weight: 400;
+                font-style: italic;
+                display: block;
+                border: 1px solid #FFF;
+                padding: 20px;
+                width: 80%;
+                margin: 30px auto;
+                
+                u {
+                    text-decoration: unset;
+                }
+            }
+            
+        }
+    }
+
+    .adjust-table {
+        border: 1px solid #111;
+
+        .title {
+            background: linear-gradient(0deg, #11111180 0%, #11111180 100%);
+            box-shadow: 0 4px 8px 0 rgb(0 0 0 / 35%), 0 0 24px 0 #111 inset;
+            padding: 10px 16px;
+
+            h4 {
+                margin: 0;
+                font-weight: 900;
+                font-style: normal;
+                letter-spacing: 1px;
+                font-size: 1.25rem;
+                line-height: 1.25rem;
+                text-transform: uppercase;
+            }
+        }
+
+        .head,
+        .row {
+            display: flex;
+            gap: 10px;
+
+            & > div {
+                flex-basis: 50%;
+            }
+        }
+
+        .row {
+            & > div {
+                font-weight: 400;
+                font-style: normal;
+                letter-spacing: 1px;
+                font-size: 0.88rem;
+                line-height: 1.38rem;
+
+                &:not(:first-child) {
+                    text-align: center;
+                }
+
+                p {
+                    margin: 0;
+
+                    &.increase {
+                        color: green;
+                    }
+
+                    &.decrease {
+                        color: red;
+                    }
+                }
+            }
+
+            &:last-child {
+                padding-bottom: 10px;
+            }
+        }
+    }
+}

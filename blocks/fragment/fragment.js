@@ -39,7 +39,7 @@ export async function loadFragment(path) {
     }
   }
   return null;
-}
+} 
 
 export default async function decorate(block) {
   const link = block.querySelector('a');
