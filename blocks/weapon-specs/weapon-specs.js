@@ -1,3 +1,4 @@
+// these first two functions could be utils
 function createTag(tagName, styles = null) {
   const tag = document.createElement(tagName);
   if (styles && Array.isArray(styles)) tag.classList.add(...styles);
@@ -10,9 +11,10 @@ function cleanup(el) {
 }
 
 export default function decorate(block) {
+    // this block requires a section to support multiblock layout
     const section = block.closest('.section');
 
-    // wrap our table
+    // create a wrapper if one isn't already present
     if (!section.querySelector('.weapon-specs-table')) {
         const specs = section.querySelectorAll('.weapon-specs-wrapper');
         if (!specs.length) return;
@@ -21,10 +23,10 @@ export default function decorate(block) {
         section.replaceChildren(table);
     }
 
-    // remove useless wrappers
+    // remove useless wrappers (in this case)
     if (block.children.length === 1) cleanup(block);
 
-    // adjustments spec table
+    // adjustments spec table uses a variant style
     if (block.classList.contains('adjust-spec')) {
         const adjTable = createTag('div', ['adjust-table']);
         const tableContent = [...block.children].slice(1);
@@ -47,7 +49,7 @@ export default function decorate(block) {
         });
     }
 
-    // custom cols authoring pattern
+    // custom cols authoring pattern 'col-{index 0 width}-{index 1 width}'
     if (block.className.split(' ').some(c => c.includes('col-'))) {
         const cols = [...block.classList].find((s) => s.includes('col-')).split('-');
         cols.shift();
