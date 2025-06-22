@@ -35,13 +35,14 @@ export default function decorate(block) {
         block.lastElementChild.appendChild(adjTable);
         [...adjTable.children].forEach((r, i) => {
             r.classList.add(['title', 'head'][i] ?? 'row');
+            // handle additional content
             if (r.classList.contains('row') && r.children.length === 1) {
                 r.firstElementChild.classList.add('addition');
                 block.lastElementChild.appendChild(r.firstElementChild);
                 r.remove();
             }
         });
-        // style arrows text
+        // style arrows text - might want to only check rows
         const textContent = adjTable.querySelectorAll('p');
         textContent.forEach((text) => {
             if (text.textContent.includes('⇧')) text.classList.add('increase');
