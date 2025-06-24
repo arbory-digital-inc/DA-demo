@@ -64,9 +64,9 @@
     margin: 0;
     padding: 10px;
     cursor: pointer;
-    display: flex;
     align-items: center;
     justify-content: center;
+    display: none;
 }
 
 .map-info {
@@ -86,8 +86,18 @@
     font-size: 0.8em;
 }
 
-.map-info[data-show-info="true"] {
-    visibility: visible;
+.map-guide[data-show-info="true"] {
+    .map-info {
+        visibility: visible;
+    }
+
+    .close-btn {
+        display: flex;
+    }
+
+    .legend-btn {
+        display: none;
+    }
 }
 
 .map-legend {

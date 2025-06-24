@@ -37,16 +37,17 @@ function resetOverlays() {
     buttons.forEach(btn => btn.classList.remove('active'));
 }
 
-function decorateArea([label, button, area], isReset) {
+function decorateArea([label, button, area], type = 'btn') {
+    const isClose = type === 'close';
     const areaId = label.textContent.replaceAll(' ', '');
     const overlay = area.querySelector('picture');
     overlay?.classList.add('overlay');
     overlay?.setAttribute('data-guide-id', areaId);
     overlay?.setAttribute('data-guide-active', false);
     
-    button.classList.add('map-btn');
+    button.classList.add(isClose ? 'close-btn' : 'map-btn');
     button.addEventListener('click', () => {
-        if (isReset) resetOverlays();
+        if (type === 'reset') resetOverlays();
         else {
             const area = document.querySelector(`[data-guide-id="${areaId}"]`);
             const active = JSON.parse(area.getAttribute('data-guide-active'));
@@ -61,23 +62,19 @@ function decorateArea([label, button, area], isReset) {
     labelText.innerText = label.textContent;
     legend.appendChild(labelText);
     legend.appendChild(button.cloneNode(true));
+    const closeLegend = legend.querySelector('.close-btn');
+    closeLegend?.addEventListener('click', () => {
+        const guide = document.querySelector(`[data-show-info]`);
+        guide.setAttribute('data-show-info', false);
+    })
 
     return [overlay, button, legend];
 }
 
-function decorateLegend(info, btns) {
+function decorateLegend(block, btns) {
     const legendToggle = createTag('div', ['legend-btn', 'info-icon']);
-    legendToggle.addEventListener('click', () => info.setAttribute('data-show-info', true));
+    legendToggle.addEventListener('click', () => block.setAttribute('data-show-info', true));
     btns.appendChild(legendToggle);
-
-    // add the close button to the legend items
-    const close = createTag('div', ['map-legend']);
-    const closeIcon = createTag('div', ['close-btn']);
-    closeIcon.addEventListener('click', () => info.setAttribute('data-show-info', false));
-    closeIcon.innerText = 'x';
-    close.innerText = 'CLOSE';
-    close.appendChild(closeIcon);
-    info.closest('.map-info').appendChild(close);
 }
 
 export default function decorate(block) {
@@ -93,19 +90,17 @@ export default function decorate(block) {
     background.classList.add('map-bgs');
 
     const btns = createTag('div', ['map-btns']);
+    block.setAttribute('data-show-info', false);
     const info = createTag('div', ['map-info']);
-    info.setAttribute('data-show-info', false);
     
-    areas.forEach((area, areaIndex, arr) => {
-        const [overlay, button, legend] = decorateArea(
-            [...area.children],
-            arr.length <= areaIndex + 1,
-        );
+    areas.forEach((area, i, arr) => {
+        const type = arr.length <= i + 1 ? 'close' : arr.length <= i + 2 ? 'reset' : 'btn';
+        const [overlay, button, legend] = decorateArea([...area.children], type);
         if (overlay) background.appendChild(overlay);
         btns.appendChild(button);
         info.appendChild(legend);
     });
 
-    decorateLegend(info, btns);
+    decorateLegend(block, btns);
     block.replaceChildren(background, btns, info);
 }
