@@ -86,6 +86,12 @@
     font-size: 0.8em;
 }
 
+.info-btn {
+    width: 20px;
+    cursor: pointer;
+    margin-left: 16px;
+}
+
 .map-guide[data-show-info="true"] {
     .map-info {
         visibility: visible;
@@ -95,22 +101,16 @@
         display: flex;
     }
 
-    .legend-btn {
+    .info-btn {
         display: none;
     }
 }
 
-.map-legend {
+.map-overlay {
     display: flex;
     align-items: center;
     gap: 15px;
     text-transform: uppercase;
-}
-
-.info-icon {
-    width: 20px;
-    cursor: pointer;
-    margin-left: 16px;
 }
 
 @media (width >= 900px) {
@@ -130,7 +130,7 @@
         padding: 10px;
     }
 
-    .info-icon {
+    .info-btn {
         margin-left: 0;
     }
 

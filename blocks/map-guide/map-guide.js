@@ -4,7 +4,7 @@ function createTag(tagName, styles = null) {
   return tag;
 }
 
-function setMeta(block) {
+function useMeta(block) {
     const config = [...block.children];
     config.forEach(prop => {
         const [key, value] = [...prop.children];
@@ -20,7 +20,7 @@ function setMeta(block) {
             case 'info icon':
                 const icon = value.querySelector('picture');
                 if (icon) {
-                    const btns = block.closest('.section').querySelector('.legend-btn');
+                    const btns = block.closest('.section').querySelector('.info-btn');
                     if (btns) btns.appendChild(icon);
                 }
                 break;
@@ -37,15 +37,14 @@ function resetOverlays() {
     buttons.forEach(btn => btn.classList.remove('active'));
 }
 
-function decorateArea([label, button, area], type = 'btn') {
-    const isClose = type === 'close';
+function decorateOverlay([label, button, area], type = 'btn') {
     const areaId = label.textContent.replaceAll(' ', '');
     const overlay = area.querySelector('picture');
     overlay?.classList.add('overlay');
     overlay?.setAttribute('data-guide-id', areaId);
     overlay?.setAttribute('data-guide-active', false);
     
-    button.classList.add(isClose ? 'close-btn' : 'map-btn');
+    button.classList.add(type === 'close' ? 'close-btn' : 'map-btn');
     button.addEventListener('click', () => {
         if (type === 'reset') resetOverlays();
         else {
@@ -57,7 +56,7 @@ function decorateArea([label, button, area], type = 'btn') {
         }
     });
 
-    const legend = createTag('div', ['map-legend']);
+    const legend = createTag('div', ['map-overlay']);
     const labelText = createTag('div', ['label']);
     labelText.innerText = label.textContent;
     legend.appendChild(labelText);
@@ -72,33 +71,33 @@ function decorateArea([label, button, area], type = 'btn') {
 }
 
 function decorateLegend(block, btns) {
-    const legendToggle = createTag('div', ['legend-btn', 'info-icon']);
-    legendToggle.addEventListener('click', () => block.setAttribute('data-show-info', true));
-    btns.appendChild(legendToggle);
+    const btn = createTag('div', ['info-btn']);
+    btn.addEventListener('click', () => block.setAttribute('data-show-info', true));
+    btns.appendChild(btn);
 }
 
 export default function decorate(block) {
     if (block.classList.contains('meta')) {
-        setMeta(block);
+        useMeta(block);
         return;
     }
 
-    const [bgRow, ...areas] = [...block.children];
+    block.setAttribute('data-show-info', false);
+    const [bgRow, ...overlays] = [...block.children];
     const mapBg = bgRow.querySelector('picture');
-    mapBg.classList.add('background');
-    const background = mapBg.parentElement;
-    background.classList.add('map-bgs');
+    mapBg?.classList.add('background');
+    const background = mapBg?.parentElement;
+    background?.classList.add('map-bgs');
 
     const btns = createTag('div', ['map-btns']);
-    block.setAttribute('data-show-info', false);
     const info = createTag('div', ['map-info']);
     
-    areas.forEach((area, i, arr) => {
-        const type = arr.length <= i + 1 ? 'close' : arr.length <= i + 2 ? 'reset' : 'btn';
-        const [overlay, button, legend] = decorateArea([...area.children], type);
-        if (overlay) background.appendChild(overlay);
-        btns.appendChild(button);
-        info.appendChild(legend);
+    overlays.forEach(overlay => {
+        const type = overlay === overlays.at(-1) ? 'close' : overlay === overlays.at(-2) ? 'reset' : 'btn';
+        const [bg, btn, label] = decorateOverlay([...overlay.children], type);
+        if (bg) background.appendChild(bg);
+        btns.appendChild(btn);
+        info.appendChild(label);
     });
 
     decorateLegend(block, btns);
