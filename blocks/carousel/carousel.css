@@ -159,6 +159,10 @@
   padding: 16px 0;
 }
 
+.carousel.numbered{
+  background-color: red;
+}
+
 .carousel.numbered .carousel-slide-indicators {
   display: flex;
   align-items: center;
@@ -304,6 +308,7 @@
   transition: opacity 0.2s;
   cursor: pointer;
   border: 2px solid #79838d;
+  background-color: black;
 }
 
 .carousel.numbered .slide-preview.active {
