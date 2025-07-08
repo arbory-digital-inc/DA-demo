@@ -157,6 +157,22 @@ const AUTO_BLOCKS = [
       icon.append(img);
     });
   }
+
+  function getInlineFrags(el) {
+    const anchors = [...el.querySelectorAll('a')];
+    localizeLinks(anchors);
+    return anchors.reduce((acc, a) => {
+      const { href } = a;
+      const found = AUTO_BLOCKS.some((pattern) => {
+        const key = Object.keys(pattern)[0];
+        if (!href.includes(pattern[key])) return false;
+        if (key === 'fragment' && !a.closest('.block')?.classList.contains('fragment')) return true;
+        return false;
+      });
+      if (found) acc.push(a);
+      return acc;
+    }, []);
+  }
   
   
   function decorateHeader() {
@@ -170,29 +186,60 @@ const AUTO_BLOCKS = [
     header.className = meta;
     header.dataset.status = 'decorated';
   }
-  
-  export async function loadArea(area = document) {
-    const isDoc = area === document;
-    if (isDoc) decorateHeader();
 
-    // Not sure why this is all undefined below but commenting out doesn't seem to break anything
-    // ----------------------------------------------------
-    // const sections = decorateSections(area, isDoc);
-    // for (const [idx, section] of sections.entries()) {
-    //   await Promise.all(section.autoBlocks.map((block) => loadBlock(block)));
-    //   await Promise.all(section.blocks.map((block) => loadBlock(block)));
-    //   delete section.dataset.status;
-    //   if (isDoc && idx === 0) import('./postlcp.js').then(({ default: postLcp }) => postLcp());
-    // }
-    // if (isDoc) import('./lazy.js').then(({ default: lazy }) => lazy());
+export async function loadInlineFragment(path) {
+  if (path && path.startsWith('/')) {
+    const resp = await fetch(`${path}.plain.html`);
+    if (resp.ok) {
+      const main = document.createElement('div');
+      main.innerHTML = await resp.text();
+
+      // reset base path for media to fragment base
+      const resetAttributeBase = (tag, attr) => {
+        main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
+          elem[attr] = new URL(elem.getAttribute(attr), new URL(path, window.location)).href;
+        });
+      };
+      resetAttributeBase('img', 'src');
+      resetAttributeBase('source', 'srcset');
+      return main;
+    }
+  }
+  return null;
+} 
+
+export async function loadArea(area = document) {
+  const isDoc = area === document;
+  if (isDoc) {
+    decorateHeader();
   }
   
-  (async function loadNx() {
-    // Setup template
-    const template = getMetadata('template');
-    if (template) { document.body.classList.add(`${template}-template`); }
-  
-    // Load DA
-    if (!new URL(window.location.href).searchParams.get('dapreview')) return;
-    import('https://da.live/scripts/dapreview.js').then(({ default: daPreview }) => daPreview(loadArea));
-  }());
+  const inlineFrags = getInlineFrags(area);
+  const fragPromises = inlineFrags.map(async (link) => {
+    const path = link ? link.getAttribute('href') : link.textContent.trim();
+    const fragment = await loadInlineFragment(path);
+    link.parentElement.replaceWith(...fragment.childNodes);
+  });
+  if (fragPromises.length) await Promise.all(fragPromises);
+
+  // Not sure why this is all undefined below but commenting out doesn't seem to break anything
+  // ----------------------------------------------------
+  // const sections = decorateSections(area, isDoc);
+  // for (const [idx, section] of sections.entries()) {
+  //   await Promise.all(section.autoBlocks.map((block) => loadBlock(block)));
+  //   await Promise.all(section.blocks.map((block) => loadBlock(block)));
+  //   delete section.dataset.status;
+  //   if (isDoc && idx === 0) import('./postlcp.js').then(({ default: postLcp }) => postLcp());
+  // }
+  // if (isDoc) import('./lazy.js').then(({ default: lazy }) => lazy());
+}
+
+(async function loadNx() {
+  // Setup template
+  const template = getMetadata('template');
+  if (template) { document.body.classList.add(`${template}-template`); }  
+
+  // Load DA
+  if (!new URL(window.location.href).searchParams.get('dapreview')) return;
+  import('https://da.live/scripts/dapreview.js').then(({ default: daPreview }) => daPreview(loadArea));
+}());

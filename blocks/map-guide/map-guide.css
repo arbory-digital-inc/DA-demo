@@ -1,0 +1,140 @@
+.map-guide {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: relative;
+    align-items: flex-start;
+    max-width: 900px;
+    margin: 0 auto;
+
+    &.meta {
+        display: none;
+    }
+}
+
+.map-bgs {
+    position: relative;
+
+    .background {
+        display: block;
+        position: relative;
+        height: 100%;
+        width: 100%;
+        border: 1px solid #F96800;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        visibility: hidden;
+    }
+
+    .overlay[data-guide-active="true"] {
+        visibility: visible;
+    }
+}
+
+.map-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.map-btn {
+    display: inline-flex;
+    height: 30px;
+    width: 30px;
+    padding: 5px;
+    background-color: black;
+    border: 1px solid #F96800;
+    box-shadow: 0 8px 12px 0 rgb(0 0 0 / 50%);
+    cursor: pointer;
+
+    &.active {
+        background: #000;
+        background: radial-gradient(circle, rgba(0 0 0 / 100%) 0%, rgba(249 104 0 / 100%) 100%);
+    }
+}
+
+.close-btn {
+    height: 40px;
+    width: 40px;
+    margin: 0;
+    padding: 10px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+.map-info {
+    position: absolute;
+    visibility: hidden;
+    background-color: rgb(0 0 0 / 80%);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 15px;
+    border: 5px solid rgb(0 0 0 / 80%);
+    top: -5px;
+    left: -5px;
+    font-size: 0.8em;
+}
+
+.info-btn {
+    width: 20px;
+    cursor: pointer;
+    margin-left: 16px;
+}
+
+.map-guide[data-show-info="true"] {
+    .map-info {
+        visibility: visible;
+    }
+
+    .close-btn {
+        display: flex;
+    }
+
+    .info-btn {
+        display: none;
+    }
+}
+
+.map-overlay {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-transform: uppercase;
+}
+
+@media (width >= 900px) {
+    .map-guide {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .map-btns {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .map-btn {
+        height: 40px;
+        width: 40px;
+        padding: 10px;
+    }
+
+    .info-btn {
+        margin-left: 0;
+    }
+
+    .map-info {
+        font-size: 1em;
+    }
+}
