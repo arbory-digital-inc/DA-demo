@@ -26,6 +26,40 @@ function updateActiveSlide(slide) {
       indicator.querySelector('button').setAttribute('disabled', 'true');
     }
   });
+  
+  // Update numbered variant data attributes
+  const slideIndicators = block.querySelector('.carousel-slide-indicators');
+  if (slideIndicators) {
+    slideIndicators.dataset.currentSlide = slideIndex + 1;
+    slideIndicators.dataset.totalSlides = slides.length;
+  }
+  
+  // Update counter in the navigation row
+  const counter = block.querySelector('.carousel-counter');
+  const navigationRow = block.querySelector('.carousel-navigation-row');
+  if (counter) {
+    counter.dataset.currentSlide = slideIndex + 1;
+    counter.dataset.totalSlides = slides.length;
+  }
+  
+  // Update progress bar
+  const progressBar = block.querySelector('.carousel-progress-bar');
+  if (progressBar) {
+    progressBar.dataset.currentSlide = slideIndex + 1;
+    progressBar.dataset.totalSlides = slides.length;
+  }
+  
+  // Update slide previews if they exist
+  const slidePreviews = block.querySelectorAll('.slide-preview');
+  if (slidePreviews.length > 0) {
+    slidePreviews.forEach((preview, idx) => {
+      if (idx === slideIndex) {
+        preview.classList.add('active');
+      } else {
+        preview.classList.remove('active');
+      }
+    });
+  }
 }
 
 function showSlide(block, slideIndex = 0) {
@@ -115,21 +149,64 @@ export default async function decorate(block) {
     slideIndicators = document.createElement('ol');
     slideIndicators.classList.add('carousel-slide-indicators');
     slideIndicatorsNav.append(slideIndicators);
-    block.append(slideIndicatorsNav);
-
+    
     const slideNavButtons = document.createElement('div');
     slideNavButtons.classList.add('carousel-navigation-buttons');
     slideNavButtons.innerHTML = `
       <button type="button" class= "slide-prev" aria-label="${placeholders.previousSlide || 'Previous Slide'}"></button>
       <button type="button" class="slide-next" aria-label="${placeholders.nextSlide || 'Next Slide'}"></button>
     `;
-
-    container.append(slideNavButtons);
+    
+    if (block.classList.contains('numbered')) {
+      // Create slide previews container
+      const slidePreviews = document.createElement('ul');
+      slidePreviews.classList.add('slide-previews');
+      
+      // Add slide previews to the nav (main area) and append first
+      slideIndicatorsNav.append(slidePreviews);
+      block.append(slideIndicatorsNav);
+      
+      // Create a new navigation row for counter and arrows
+      const navigationRow = document.createElement('div');
+      navigationRow.classList.add('carousel-navigation-row');
+      
+      // Create a progress bar element
+      const progressBar = document.createElement('div');
+      progressBar.classList.add('carousel-progress-bar');
+      progressBar.dataset.currentSlide = '1';
+      progressBar.dataset.totalSlides = rows.length.toString();
+      
+      // Create the active progress indicator
+      const progressIndicator = document.createElement('div');
+      progressIndicator.classList.add('progress-indicator');
+      progressBar.appendChild(progressIndicator);
+      
+      // Create a container for the counter
+      const counterContainer = document.createElement('div');
+      counterContainer.classList.add('carousel-counter');
+      counterContainer.dataset.currentSlide = '1';
+      counterContainer.dataset.totalSlides = rows.length.toString();
+      
+      // Add progress bar, counter and navigation buttons to the navigation row
+      navigationRow.append(progressBar);
+      navigationRow.append(counterContainer);
+      navigationRow.append(slideNavButtons);
+      
+      // Add the navigation row after the preview thumbnails
+      block.append(navigationRow);
+    } else {
+      container.append(slideNavButtons);
+      block.append(slideIndicatorsNav);
+    }
   }
 
+  // Store slides for later use with previews
+  const createdSlides = [];
+  
   rows.forEach((row, idx) => {
     const slide = createSlide(row, idx, carouselId);
     slidesWrapper.append(slide);
+    createdSlides.push(slide);
 
     if (slideIndicators) {
       const indicator = document.createElement('li');
@@ -140,6 +217,35 @@ export default async function decorate(block) {
     }
     row.remove();
   });
+  
+  // Create slide previews if it's a numbered variant
+  if (block.classList.contains('numbered')) {
+    const slidePreviews = block.querySelector('.slide-previews');
+    
+    createdSlides.forEach((slide, idx) => {
+      // Find the image in the slide
+      const slideImage = slide.querySelector('.carousel-slide-image img');
+      if (slideImage) {
+        const preview = document.createElement('li');
+        preview.classList.add('slide-preview');
+        if (idx === 0) preview.classList.add('active');
+        preview.dataset.targetSlide = idx;
+        
+        // Create a thumbnail image
+        const thumbnailImg = document.createElement('img');
+        thumbnailImg.src = slideImage.src;
+        thumbnailImg.alt = '';
+        preview.appendChild(thumbnailImg);
+        
+        // Add click event to navigate to the slide
+        preview.addEventListener('click', () => {
+          showSlide(block, idx);
+        });
+        
+        slidePreviews.appendChild(preview);
+      }
+    });
+  }
 
   container.append(slidesWrapper);
   block.prepend(container);

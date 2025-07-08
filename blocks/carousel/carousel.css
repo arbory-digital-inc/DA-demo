@@ -151,3 +151,200 @@
     --slide-content-width: auto;
   }
 }
+
+
+/* Numbered variant */
+.carousel.numbered nav {
+  height: auto;
+  padding: 16px 0;
+}
+
+.carousel.numbered .carousel-slide-indicators {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
+.carousel.numbered .carousel-navigation-row {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 20px;
+  padding: 16px 16px 16px;
+  color: white;
+}
+
+.carousel.numbered .carousel-counter {
+  display: flex;
+  align-items: center;
+}
+
+.carousel.numbered .carousel-counter::before {
+  content: attr(data-current-slide) ' of ' attr(data-total-slides);
+  font-family: "Hitmarker Condensed Black", Arial, sans-serif;
+  font-weight: 700;
+}
+
+/* Progress bar styling */
+.carousel.numbered .carousel-progress-bar {
+  flex-grow: 1;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  position: relative;
+  margin-right: auto;
+  display: flex;
+}
+
+.carousel.numbered .carousel-progress-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 1;
+}
+
+.carousel.numbered .progress-indicator {
+  position: absolute;
+  height: 8px;
+  bottom: -1px;
+  background-color: #9C978F;
+  transition: left 0.3s ease, width 0.3s ease;
+  z-index: 2;
+}
+
+.carousel.numbered .carousel-progress-bar[data-current-slide="1"][data-total-slides="1"] .progress-indicator {
+  left: 0;
+  width: 100%;
+}
+
+.carousel.numbered .carousel-progress-bar[data-current-slide="1"][data-total-slides="2"] .progress-indicator {
+  left: 0;
+  width: 50%;
+}
+.carousel.numbered .carousel-progress-bar[data-current-slide="2"][data-total-slides="2"] .progress-indicator {
+  left: 50%;
+  width: 50%;
+}
+
+.carousel.numbered .carousel-progress-bar[data-current-slide="1"][data-total-slides="3"] .progress-indicator {
+  left: 0;
+  width: 33.33%;
+}
+.carousel.numbered .carousel-progress-bar[data-current-slide="2"][data-total-slides="3"] .progress-indicator {
+  left: 33.33%;
+  width: 33.33%;
+}
+.carousel.numbered .carousel-progress-bar[data-current-slide="3"][data-total-slides="3"] .progress-indicator {
+  left: 66.66%;
+  width: 33.33%;
+}
+
+.carousel.numbered .carousel-progress-bar[data-current-slide="1"][data-total-slides="4"] .progress-indicator {
+  left: 0;
+  width: 25%;
+}
+.carousel.numbered .carousel-progress-bar[data-current-slide="2"][data-total-slides="4"] .progress-indicator {
+  left: 25%;
+  width: 25%;
+}
+.carousel.numbered .carousel-progress-bar[data-current-slide="3"][data-total-slides="4"] .progress-indicator {
+  left: 50%;
+  width: 25%;
+}
+.carousel.numbered .carousel-progress-bar[data-current-slide="4"][data-total-slides="4"] .progress-indicator {
+  left: 75%;
+  width: 25%;
+}
+
+.carousel.numbered .carousel-progress-bar[data-current-slide="1"][data-total-slides="5"] .progress-indicator {
+  left: 0;
+  width: 20%;
+}
+.carousel.numbered .carousel-progress-bar[data-current-slide="2"][data-total-slides="5"] .progress-indicator {
+  left: 20%;
+  width: 20%;
+}
+.carousel.numbered .carousel-progress-bar[data-current-slide="3"][data-total-slides="5"] .progress-indicator {
+  left: 40%;
+  width: 20%;
+}
+.carousel.numbered .carousel-progress-bar[data-current-slide="4"][data-total-slides="5"] .progress-indicator {
+  left: 60%;
+  width: 20%;
+}
+.carousel.numbered .carousel-progress-bar[data-current-slide="5"][data-total-slides="5"] .progress-indicator {
+  left: 80%;
+  width: 20%;
+}
+
+.carousel.numbered .carousel-slide-indicator {
+  display: none;
+}
+
+/* Slide previews */
+.carousel.numbered .slide-previews {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.carousel.numbered .slide-preview {
+  width: 150px;
+  height: 75px;
+  border-radius: 1px;
+  overflow: hidden;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  cursor: pointer;
+  border: 2px solid #79838d;
+}
+
+.carousel.numbered .slide-preview.active {
+  opacity: 1;
+  border-color: white;
+}
+
+.carousel.numbered .slide-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel.numbered .carousel-navigation-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: static;
+  transform: none;
+  width: auto;
+}
+
+.carousel.numbered .carousel-navigation-buttons button {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
+  border-radius: 4px;
+}
+
+.carousel.numbered .carousel-navigation-buttons button:hover,
+.carousel.numbered .carousel-navigation-buttons button:focus-visible {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.carousel.numbered .carousel-navigation-row {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 20px;
+  padding: 0px 2px 16px 0;
+  color: white;
+}
+
