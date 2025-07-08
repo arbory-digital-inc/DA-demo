@@ -159,10 +159,6 @@
   padding: 16px 0;
 }
 
-.carousel.numbered{
-  background-color: red;
-}
-
 .carousel.numbered .carousel-slide-indicators {
   display: flex;
   align-items: center;
